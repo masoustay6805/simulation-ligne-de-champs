@@ -15,6 +15,7 @@ ligne-de-champs.o: ligne-de-champs.c ligne-de-champs.h
 ./utils/gfx/gfx.o: ./utils/gfx/gfx.c ./utils/gfx/gfx.h
 
 clean: 
-	rm -rf *.o ligne-de-champs
+	rm -f ligne-de-champs
+	find . -type f -name '*.o' -delete
 
 rebuild: clean ligne-de-champs
