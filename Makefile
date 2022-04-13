@@ -4,7 +4,7 @@ LDFLAGS=-fsanitize=address -fsanitize=leak
 
 
 ligne-de-champs: ligne-de-champs.o ./utils/vec2/vec2.o ./utils/utils.o ./utils/gfx/gfx.o main.o
-	$(CC) $(LDFLAGS) $^ $@
+	$(CC) $(LDFLAGS) $^ -o $@ -lm -lSDL2
 
 ligne-de-champs.o: ligne-de-champs.c ligne-de-champs.h
 
@@ -15,6 +15,6 @@ ligne-de-champs.o: ligne-de-champs.c ligne-de-champs.h
 ./utils/gfx/gfx.o: ./utils/gfx/gfx.c ./utils/gfx/gfx.h
 
 clean: 
-	rm -f -r *.o ligne-de-champs
+	rm -rf *.o ligne-de-champs
 
 rebuild: clean ligne-de-champs
