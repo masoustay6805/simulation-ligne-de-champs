@@ -148,29 +148,40 @@ double e_calculate(charge_t c, vec2 qP) {
   return K * c.q / pow(vec2_norm(qP), 2.0);
 }
 
-double tetaX_calculate(int WIDTH, int HEIGHT)
-{
-    return 1 / sqrt((WIDTH * WIDTH) + (HEIGHT * HEIGHT));
+// calcul de la constante tetaX
+double tetaX_calculate(int WIDTH, int HEIGHT) {
+  return 1 / sqrt((WIDTH * WIDTH) + (HEIGHT * HEIGHT));
+}
+
+// calcul du vecteur total E
+vec2 totalE(charge_t *charges, int num_charges, vec2 P) {
+  vec2 tmp, qP;
+  vec2 totalE = vec2_create_zero();
+  for (int i = 0; i < num_charges; i++) {
+    qP = qp_distance(P, charges[i]);
+    tmp = vec2_mul(e_calculate(charges[i], qP), charges[i].pos);
+    tmp = vec2_div(vec2_norm(charges[i].pos), tmp);
+    totalE = vec2_add(totalE, tmp);
+  }
+  return totalE;
 }
 
 // Psuivant = P + tetaX * totalE / ||totalE||
-vec2 P_next_calculate(vec2 previous_P, double tetaX, vec2 totalE)
-{
-    vec2 P_next;
-    P_next = vec2_mul(tetaX, totalE);
-    P_next = vec2_div(vec2_norm(totalE), P_next);
-    P_next = vec2_add(previous_P, P_next);
-    return P_next;
+vec2 P_next_calculate(vec2 previous_P, double tetaX, vec2 totalE) {
+  vec2 P_next;
+  P_next = vec2_mul(tetaX, totalE);
+  P_next = vec2_div(vec2_norm(totalE), P_next);
+  P_next = vec2_add(previous_P, P_next);
+  return P_next;
 }
 
 // Pprécédant = P - tetaX * totalE / ||totalE||
-vec2 P_previous_calculate(vec2 previous_P, double tetaX, vec2 totalE)
-{
-    vec2 P_previous;
-    P_previous = vec2_mul(tetaX, totalE);
-    P_previous = vec2_div(vec2_norm(totalE), P_previous);
-    P_previous = vec2_sub(previous_P, P_previous);
-    return P_previous;
+vec2 P_previous_calculate(vec2 previous_P, double tetaX, vec2 totalE) {
+  vec2 P_previous;
+  P_previous = vec2_mul(tetaX, totalE);
+  P_previous = vec2_div(vec2_norm(totalE), P_previous);
+  P_previous = vec2_sub(previous_P, P_previous);
+  return P_previous;
 }
 
 // Compute E*qP/norm(qP)
@@ -194,16 +205,88 @@ bool compute_total_normalized_e(charge_t *charges, int num_charges, vec2 p,
   }
 }
 
+bool in_univers(vec2 p, charge_t *charges, double limitX, double limitY,
+                int num_charges, double limitCharge) {
+  bool in_univers = false;
+  if (p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0) {
+    in_univers = true;
+    for (int i = 0; i < num_charges; i++) {
+      if (p.x > (charges[i].pos.x - limitCharge) &&
+          p.x < (charges[i].pos.x + limitCharge) &&
+          p.y > (charges[i].pos.y - limitCharge) &&
+          p.y < charges[i].pos.y + limitCharge) {
+        in_univers = false;
+      }
+    }
+  }
+  return in_univers;
+}
 // Compute and then draw all the points belonging to a field line,
 // starting from pos0.
 // Returns false if pos0 is not a valid position
 // (for example if pos0 is too close to a charge).
-static bool draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
-                            int num_charges, double dx, vec2 pos0, double x0,
-                            double x1, double y0, double y1) {}
+void draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
+                            int num_charges, double dx, vec2 pos0, int color) {
+  vec2 total_E, qP, P;
+  P = pos0;
+  double tetaX = tetaX_calculate(SCREEN_WIDTH, SCREEN_HEIGHT);
+  while (in_univers(P, charges, LIMIT_X, LIMIT_Y, num_charges, dx)) {
+    gfx_putpixel(ctxt, P.x * SCREEN_WIDTH, P.y * SCREEN_HEIGHT, color);
+    total_E = totalE(charges, num_charges, P);
+    P = P_next_calculate(P, tetaX, total_E);
+  }
+  P = pos0;
+  while (in_univers(P, charges, LIMIT_X, LIMIT_Y, num_charges, dx)) {
+    gfx_putpixel(ctxt, P.x * SCREEN_WIDTH, P.y * SCREEN_HEIGHT, color);
+    total_E = totalE(charges, num_charges, P);
+    P = P_previous_calculate(P, tetaX, total_E);
+  }
+  // gfx_present(ctxt);
+}
 // Draw all the charges
 // A circle with minus sign for negative charges
 // A circle with a plus sign for positive charges
-static void draw_charges(struct gfx_context_t *context, charge_t *charges,
-                         int num_charges, double x0, double x1, double y0,
-                         double y1) {}
+void draw_charges(struct gfx_context_t *context, charge_t *charges,
+                         int num_charges, int color) {
+    int circleRadius=10;
+  for (int i = 0; i < num_charges; i++) {
+    coordinates_t c;
+    c.column = charges[i].pos.x * SCREEN_WIDTH;
+    c.row = charges[i].pos.y * SCREEN_HEIGHT;
+
+    if (charges[i].q > 0) { // charge +
+      coordinates_t p1, p2, p3, p4;
+
+      //calcul des deux points pour la ligne vericale du plus
+      p1.column = c.column;
+      p1.row = c.row - circleRadius / 2;
+      p2.column = c.column;
+      p2.row = c.row + circleRadius / 2;
+
+      //calcul des deux points pour la ligne horizontale du plus
+      p3.column = c.column - circleRadius / 2;
+      p3.row = c.row;
+      p4.column = c.column + circleRadius / 2;
+      p4.row = c.row;
+
+      
+
+      //dessiner le plus a l'ecran 
+      gfx_draw_line(context, p1, p2, color);
+      gfx_draw_line(context, p3, p4, color);
+    } else { // charge -
+      coordinates_t m1, m2;
+      //calcul des deux points pour dessiner le signe -
+      m1.column = c.column - circleRadius / 2;
+      m1.row = c.row;
+      m2.column = c.column + circleRadius / 2;
+      m2.row = c.row;
+      //dessiner le moins à l'écran
+      gfx_draw_line(context, m1, m2, color);
+    }
+    //dessin de la charge
+    gfx_draw_circle(context, c, circleRadius, color);
+  }
+
+  // gfx_present(context);
+}
