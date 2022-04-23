@@ -44,6 +44,11 @@ vec2 vec2_mul(double scalar, vec2 rhs) {
     return vector;
 }
 
+vec2 vec2_div(double scalar, vec2 rhs){
+    vec2 vector = {.x = rhs.x / scalar, .y = rhs.y / scalar};
+    return vector;
+}
+
 /// Compute the dot product (scalar product) between two vectors.
 /// @param lhs The left operand.
 /// @param rhs The right operand.
@@ -74,6 +79,7 @@ vec2 vec2_normalize(vec2 v) {
     vec2 vector = {.x = v.x / norm, .y = v.y / norm};
     return vector;
 }
+
 
 /// Check whether two vectors are approximately equals within a given tolerance.
 /// @param lhs The left operand.

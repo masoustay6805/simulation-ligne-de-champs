@@ -1,5 +1,7 @@
 #ifndef _LIGNE_DE_CHAMPS_H_
 #define _LIGNE_DE_CHAMPS_H_
+#define SCREEN_WIDTH 100
+#define SCREEN_HEIGHT 100
 
 #include "utils/gfx/gfx.h"
 #include "utils/utils.h"
