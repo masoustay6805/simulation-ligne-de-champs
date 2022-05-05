@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Lignes de champs éléctriques</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<h1 id="tp---ligne-de-champs-éléctriques">TP - Ligne de champs éléctriques</h1>
+<h2 id="introduction"><strong>Introduction</strong></h2>
+<p>Un champ éléctrique est le champ vectoriel créée par des particules éléctriquement chargées. Quand plusieurs charges sont à proximité de l’autres ces lignes de champs éléctriques diffère prenant en compte prenant en compte si la charges est chargée positivement ou négativement. La visualisation des lignes de champs éléctrique permet d’apercevoir directement ce qui se passe entre plusieurs charges qui pour nous la plupart du temps est invisible à l’oeil nu. Et que le comportement des lignes de champs éléctriques est différent dépendant du nombre de charges et du signe de chaque charge(positif ou négatif). De ce fait nous allons donc voir comment ai-je réaliser la visualisation de ces lignes de champs éléctriques, commençant tout d’abord par la réalisation des dessin de chaque charge. Puis la réalisation du dessin de chaque ligne de champ à partir d’un ensemble de particules dans notre univers. Puis comment j’ai assembler ces deux procédé pour avoir le tout sur l’écran(charges + lignes de champs éléctriques).</p>
+<h2 id="réalisation-du-dessin-des-charges-éléctriques"><strong>Réalisation du dessin des charges éléctriques</strong></h2>
+<p>Tout d’abord, chaque charge éléctrique sera représenté d’un cercle avec un plus ou moins à l’intérieur dépendant du signe de la charge:</p>
+<!-- ![Dessin charges à partir de la librairie gfx](./Images/Dessin_charges.png) -->
+<p align="center">
+<img alt="Dessin des charges" src="./Images/Dessin_charges.png">
+</p>
+<p>Pour représenter les droites du signe plus et moins à l’écran, j’ai utilisé l’algorithme de tracé de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous:</p>
+<!-- ![Tracé de Bresenham(Extrait de wikipédia)](./Images/Trace_Bresenham.png) -->
+<p align="center">
+<img alt="Trace de Bresenham" src="./Images/Trace_Bresenham.png" title="Extrait de Wikipedia">
+</p>
+</body>
+</html>

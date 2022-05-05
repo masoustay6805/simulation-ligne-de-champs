@@ -44,9 +44,12 @@ vec2 vec2_mul(double scalar, vec2 rhs) {
     return vector;
 }
 
+vec2 vec2_mul_vec(vec2 lhs, vec2 rhs) {
+    return (vec2){.x = lhs.x * rhs.x, .y = lhs.y * rhs.y};
+}
+
 vec2 vec2_div(double scalar, vec2 rhs){
-    vec2 vector = {.x = rhs.x / scalar, .y = rhs.y / scalar};
-    return vector;
+    return (vec2){.x = rhs.x / scalar, .y = rhs.y / scalar};
 }
 
 /// Compute the dot product (scalar product) between two vectors.

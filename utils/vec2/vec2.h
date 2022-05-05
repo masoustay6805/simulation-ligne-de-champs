@@ -24,6 +24,8 @@ vec2 vec2_sub(vec2 lhs, vec2 rhs);
 
 vec2 vec2_mul(double scalar, vec2 rhs);
 
+vec2 vec2_mul_vec(vec2 lhs, vec2 rhs);
+
 vec2 vec2_div(double scalar, vec2 rhs);
 
 double vec2_dot(vec2 lhs, vec2 rhs);
