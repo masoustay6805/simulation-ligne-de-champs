@@ -15,9 +15,11 @@ Tout d'abord, chaque charge éléctrique sera représenté d'un cercle avec un p
 </p> -->
 
   
-Pour représenter les droites du signe plus et moins à l'écran, j'ai utilisé l'algorithme de tracé de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous: 
+Pour représenter les droites du signe plus et moins à l'écran, j'ai utilisé l'algorithme de tracé de droites de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous: 
 
 ![Tracé de Bresenham(Extrait de wikipédia)](./Images/Trace_Bresenham.png)
 <!-- <p align="center">
     <img alt="Trace de Bresenham" src="./Images/Trace_Bresenham.png" title="Extrait de Wikipedia">
 </p> -->
+
+Pour le cercle autour de chaque charge, j'ai utilisé l'algorithme de tracé de cercle d'Andres. Cet algorithme permet de tracer des cercles en image matricielle, et donc de pouvoir dessiner un cercle sans laisser de trous. Le principe est de paver entièrement le plan par des cercles concentriques.

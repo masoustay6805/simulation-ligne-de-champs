@@ -153,6 +153,8 @@ void gfx_draw_circle(struct gfx_context_t *ctxt, coordinates_t c, uint32_t r,
   uint32_t d = r - 1;
   while (y >= x)
   {
+    //draw full circle
+    //put pixel in the differents sides
     gfx_putpixel(ctxt, c.column + y, c.row + x, color);
     gfx_putpixel(ctxt, c.column + x, c.row + y, color);
     gfx_putpixel(ctxt, c.column + y, c.row - x, color);
@@ -241,10 +243,13 @@ bool in_univers(vec2 p, charge_t *charges, double limitX, double limitY,
                 int num_charges, double eps)
 {
   bool in_univers = false;
+  //check if P is in the window
   if (p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0)
   {
     in_univers = true;
   }
+  //check if P is in the charges(pos(charges)-eps or pos(charges)+eps)
+  //if it in the charge don't draw it
   for (int i = 0; i < num_charges; i++)
   {
     if (p.x > (charges[i].pos.x - eps) && p.x < (charges[i].pos.x + eps) &&
