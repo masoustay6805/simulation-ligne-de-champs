@@ -153,8 +153,8 @@ void gfx_draw_circle(struct gfx_context_t *ctxt, coordinates_t c, uint32_t r,
   uint32_t d = r - 1;
   while (y >= x)
   {
-    //draw full circle
-    //put pixel in the differents sides
+    // draw full circle
+    // put pixel in the differents sides
     gfx_putpixel(ctxt, c.column + y, c.row + x, color);
     gfx_putpixel(ctxt, c.column + x, c.row + y, color);
     gfx_putpixel(ctxt, c.column + y, c.row - x, color);
@@ -202,7 +202,7 @@ double tetaX_calculate(int WIDTH, int HEIGHT)
 }
 
 // calcul du vecteur total E
-//E⃗ =∑Ni Ei⋅qiP/||qiP||.
+// E⃗ =∑Ni Ei⋅qiP/||qiP||.
 vec2 totalE(charge_t *charges, int num_charges, vec2 P)
 {
   vec2 tmp, qP;
@@ -243,13 +243,13 @@ bool in_univers(vec2 p, charge_t *charges, double limitX, double limitY,
                 int num_charges, double eps)
 {
   bool in_univers = false;
-  //check if P is in the window
+  // check if P is in the window
   if (p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0)
   {
     in_univers = true;
   }
-  //check if P is in the charges(pos(charges)-eps or pos(charges)+eps)
-  //if it in the charge don't draw it
+  // check if P is in the charges(pos(charges)-eps or pos(charges)+eps)
+  // if it in the charge don't draw it
   for (int i = 0; i < num_charges; i++)
   {
     if (p.x > (charges[i].pos.x - eps) && p.x < (charges[i].pos.x + eps) &&
@@ -290,7 +290,7 @@ void draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
 // A circle with minus sign for negative charges
 // A circle with a plus sign for positive charges
 void draw_charges(struct gfx_context_t *context, charge_t *charges,
-                  int num_charges, int color)
+                  int num_charges, int colorPositive, int colorNegative)
 {
   for (int i = 0; i < num_charges; i++)
   {
@@ -298,13 +298,13 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
     // remise à l'échelle de la fenêtre les coordonnées de chaque charge
     coordinates_t c = position_to_coordinates(SCREEN_WIDTH, SCREEN_HEIGHT, 0, LIMIT_X, 0, LIMIT_Y, charges[i].pos);
     // dessin de la charge
-    gfx_draw_circle(context, c, CHARGE_RADIUS, color);
 
     if (charges[i].q > 0)
     { // plus sign
+      gfx_draw_circle(context, c, CHARGE_RADIUS, colorPositive);
       coordinates_t p1, p2, p3, p4;
 
-      // calcul des deux points pour la ligne vericale du plus
+      // calcul des deux points pour la ligne verticale du plus
       p1.column = c.column;
       p1.row = c.row - CHARGE_RADIUS / 2;
       p2.column = c.column;
@@ -317,11 +317,12 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
       p4.row = c.row;
 
       // dessiner le plus a l'ecran
-      gfx_draw_line(context, p1, p2, color);
-      gfx_draw_line(context, p3, p4, color);
+      gfx_draw_line(context, p1, p2, colorPositive);
+      gfx_draw_line(context, p3, p4, colorPositive);
     }
     else
     { // minus sign
+      gfx_draw_circle(context, c, CHARGE_RADIUS, colorNegative);
       coordinates_t m1, m2;
       // calcul des deux points pour dessiner le signe -
       m1.column = c.column - CHARGE_RADIUS / 2;
@@ -329,7 +330,7 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
       m2.column = c.column + CHARGE_RADIUS / 2;
       m2.row = c.row;
       // dessiner le moins à l'écran
-      gfx_draw_line(context, m1, m2, color);
+      gfx_draw_line(context, m1, m2, colorNegative);
     }
   }
 }

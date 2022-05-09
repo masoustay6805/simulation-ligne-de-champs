@@ -28,6 +28,6 @@ void draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
 // A circle with minus sign for negative charges
 // A circle with a plus sign for positive charges
 void draw_charges(struct gfx_context_t *context, charge_t *charges,
-                         int num_charges, int color);
+                         int num_charges, int colorPositive, int colorNegative);
 
 #endif

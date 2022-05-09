@@ -30,7 +30,7 @@ int main()
   vec2 P;
 
   //draw all charges
-  draw_charges(ctxt, charges, 3, COLOR_BLUE);
+  draw_charges(ctxt, charges, 3, COLOR_RED, COLOR_BLUE);
   for (int i = 0; i < LINENB; i++)
   {
     //draw field lines for each random P

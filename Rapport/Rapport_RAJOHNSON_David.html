@@ -18,14 +18,23 @@
 <p>Un champ éléctrique est le champ vectoriel créée par des particules éléctriquement chargées. Quand plusieurs charges sont à proximité de l’autres ces lignes de champs éléctriques diffère prenant en compte prenant en compte si la charges est chargée positivement ou négativement. La visualisation des lignes de champs éléctrique permet d’apercevoir directement ce qui se passe entre plusieurs charges qui pour nous la plupart du temps est invisible à l’oeil nu. Et que le comportement des lignes de champs éléctriques est différent dépendant du nombre de charges et du signe de chaque charge(positif ou négatif). De ce fait nous allons donc voir comment ai-je réaliser la visualisation de ces lignes de champs éléctriques, commençant tout d’abord par la réalisation des dessin de chaque charge. Puis la réalisation du dessin de chaque ligne de champ à partir d’un ensemble de particules dans notre univers. Puis comment j’ai assembler ces deux procédé pour avoir le tout sur l’écran(charges + lignes de champs éléctriques).</p>
 <h2 id="réalisation-du-dessin-des-charges-éléctriques"><strong>Réalisation du dessin des charges éléctriques</strong></h2>
 <p>Tout d’abord, chaque charge éléctrique sera représenté d’un cercle avec un plus ou moins à l’intérieur dépendant du signe de la charge:</p>
-<!-- ![Dessin charges à partir de la librairie gfx](./Images/Dessin_charges.png) -->
-<p align="center">
-<img alt="Dessin des charges" src="./Images/Dessin_charges.png">
-</p>
-<p>Pour représenter les droites du signe plus et moins à l’écran, j’ai utilisé l’algorithme de tracé de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous:</p>
-<!-- ![Tracé de Bresenham(Extrait de wikipédia)](./Images/Trace_Bresenham.png) -->
-<p align="center">
-<img alt="Trace de Bresenham" src="./Images/Trace_Bresenham.png" title="Extrait de Wikipedia">
-</p>
+<figure>
+<img src="./Images/Dessin_charges.png" alt="Dessin charges à partir de la librairie gfx" /><figcaption>Dessin charges à partir de la librairie gfx</figcaption>
+</figure>
+<!-- <p align="center">
+    <img alt="Dessin des charges" src="./Images/Dessin_charges.png">
+</p> -->
+<p>Pour représenter les droites du signe plus et moins à l’écran, j’ai utilisé l’algorithme de tracé de droites de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous:</p>
+<p><img src="./Images/Trace_Bresenham.png" alt="Tracé de Bresenham(Extrait de wikipédia)" /> <!-- <p align="center">
+    <img alt="Trace de Bresenham" src="./Images/Trace_Bresenham.png" title="Extrait de Wikipedia">
+</p> --></p>
+<p>Pour le cercle autour de chaque charge, j’ai utilisé l’algorithme de tracé de cercle d’Andres. Cet algorithme permet de tracer des cercles en image matricielle, et donc de pouvoir dessiner un cercle sans laisser de trous. Le principe est de paver entièrement le plan par des cercles concentriques.</p>
+<p>En assemblant ces deux différentes méthodes, j’ai pu dessiner le cercle autour de la charge avec un rayon donné puis dessiner le plus et le moins dépendant du signe de la charge. Le signe “plus” se dessine dans mon cas, en traçant une droite verticalement partant de la position de la charge plus ou moins le rayon de charge/2 :<br />
+<strong>Point 1</strong>: x=pos(Charge).x+(rayon(Charge)/2) // y=pos(charge).y<br />
+<strong>Point 2</strong>: x=pos(Charge).x-(rayon(Charge)/2) // y=pos(charge).y</p>
+<p>Et de tracer également une droite horizontalement:<br />
+<strong>Point 1</strong>: x=pos(Charge).x // y=pos(Charge).y+(rayon(Charge)/2)<br />
+<strong>Point 2</strong>: x=pos(Charge).x // pos(Charge).y-(rayon(Charge)/2)</p>
+<p>Pour le signe “moins”, il suffit juste de reprendre le tracé horizontal.</p>
 </body>
 </html>

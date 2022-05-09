@@ -23,3 +23,18 @@ Pour représenter les droites du signe plus et moins à l'écran, j'ai utilisé 
 </p> -->
 
 Pour le cercle autour de chaque charge, j'ai utilisé l'algorithme de tracé de cercle d'Andres. Cet algorithme permet de tracer des cercles en image matricielle, et donc de pouvoir dessiner un cercle sans laisser de trous. Le principe est de paver entièrement le plan par des cercles concentriques.
+
+En assemblant ces deux différentes méthodes, j'ai pu dessiner le cercle autour de la charge avec un rayon donné puis dessiner le plus et le moins dépendant du signe de la charge. Le signe "plus" se dessine dans mon cas, en traçant une droite verticalement partant de la position de la charge plus ou moins le rayon de charge/2 :  
+**Point 1**: x=pos(Charge).x+(rayon(Charge)/2) // y=pos(charge).y  
+**Point 2**: x=pos(Charge).x-(rayon(Charge)/2) // y=pos(charge).y
+
+
+Et de tracer également une droite horizontalement:  
+**Point 1**: x=pos(Charge).x // y=pos(Charge).y+(rayon(Charge)/2)  
+**Point 2**: x=pos(Charge).x // pos(Charge).y-(rayon(Charge)/2)
+
+Pour le signe "moins", il suffit juste de reprendre le tracé horizontal.  
+
+## **Réalisation de chaque ligne de champ**  
+
+
