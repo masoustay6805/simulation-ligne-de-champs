@@ -22,9 +22,10 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
   int dx = p1.column - p0.column;
   int m_dx = p0.column - p1.column;
 
-  if (dy >= 0) // octants supérieurs
+  // octants supérieurs
+  if (dy >= 0)
   {
-    if (dx >= dy) // premier octant
+    if (dx >= dy)
     {
       double e = 0;
       double a = 2 * dy;
@@ -42,7 +43,7 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
       }
     }
     else if ((dx >= 0) && (dx < dy))
-    { // deuxième octant
+    {
       int e = 0;
       int a = 2 * dx;
       int x = p0.column;
@@ -59,7 +60,7 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
       }
     }
     else if (dy >= m_dx)
-    { // troisième octant
+    {
       int e = 0;
       int a = 2 * dx;
       int m_dy = p0.row - p1.row;
@@ -77,23 +78,21 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
       }
     }
     else
-    { // quatrième octant
-      coordinates_t c0;
-      coordinates_t c1;
-
+    {
       // echange des coordonnées des deux points
-      c0.column = p1.column;
-      c0.row = p1.row;
-
-      c1.column = p0.column;
-      c1.row = p0.row;
+      coordinates_t c0 = (coordinates_t){
+          .column = p1.column,
+          .row = p1.row};
+      coordinates_t c1 = (coordinates_t){
+          .column = p0.column,
+          .row = p0.row};
 
       gfx_draw_line(ctxt, c0, c1, color);
     }
   }
   else
   {
-    if (m_dx <= dy) // huitième octant
+    if (m_dx <= dy)
     {
       int a = 2 * dy;
       int e = 0;
@@ -112,14 +111,12 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
     }
     else
     {
-      coordinates_t c0;
-      coordinates_t c1;
-
-      c0.column = p1.column;
-      c0.row = p1.row;
-
-      c1.column = p0.column;
-      c1.row = p0.row;
+      coordinates_t c0 = (coordinates_t){
+          .column = p1.column,
+          .row = p1.row};
+      coordinates_t c1 = (coordinates_t){
+          .column = p0.column,
+          .row = p0.row};
 
       gfx_draw_line(ctxt, c0, c1, color);
     }
@@ -209,8 +206,7 @@ vec2 totalE(charge_t *charges, int num_charges, vec2 P)
 // Psuivant = P + tetaX * totalE / ||totalE||
 vec2 P_next_calculate(vec2 previous_P, double tetaX, vec2 totalE)
 {
-  vec2 P_next;
-  P_next = vec2_mul(tetaX, totalE);
+  vec2 P_next = vec2_mul(tetaX, totalE);
   P_next = vec2_div(vec2_norm(totalE), P_next);
   P_next = vec2_add(previous_P, P_next);
   return P_next;
@@ -219,29 +215,28 @@ vec2 P_next_calculate(vec2 previous_P, double tetaX, vec2 totalE)
 // Pprécédant = P - tetaX * totalE / ||totalE||
 vec2 P_previous_calculate(vec2 previous_P, double tetaX, vec2 totalE)
 {
-  vec2 P_previous;
-  P_previous = vec2_mul(tetaX, totalE);
+  vec2 P_previous = vec2_mul(tetaX, totalE);
   P_previous = vec2_div(vec2_norm(totalE), P_previous);
   P_previous = vec2_sub(previous_P, P_previous);
   return P_previous;
 }
 
-// Returns false if pos0 is not a valid position
-bool in_univers(vec2 p, double limitX, double limitY)
+// Returns false if P is not a valid position
+bool in_univers(vec2 P_actual, double limitX, double limitY)
 {
-  // check if P is in the window
-  return p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0;
+  // check if P_actual is in the window
+  return P_actual.x <= limitX && P_actual.y <= limitY && P_actual.x >= 0.0 && P_actual.y >= 0.0;
 }
 
-// (for example if pos0 is too close to a charge).
-bool in_charge(vec2 p, charge_t *charges, int num_charges, double eps)
+// (for example if P is too close to a charge).
+bool in_charge(vec2 P_actual, charge_t *charges, int num_charges, double eps)
 {
-  // check if P is in the charges(pos(charges)-eps or pos(charges)+eps)
+  // check if P_actual is in the charges(pos(charges)-eps or pos(charges)+eps)
   // if it in the charge don't draw it
   for (int i = 0; i < num_charges; i++)
   {
-    if (p.x > (charges[i].pos.x - eps) && p.x < (charges[i].pos.x + eps) &&
-        p.y > (charges[i].pos.y - eps) && p.y < charges[i].pos.y + eps)
+    if (P_actual.x > (charges[i].pos.x - eps) && P_actual.x < (charges[i].pos.x + eps) &&
+        P_actual.y > (charges[i].pos.y - eps) && P_actual.y < charges[i].pos.y + eps)
     {
       return true;
     }
@@ -291,22 +286,25 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
     if (charges[i].q > 0)
     { // plus sign
       gfx_draw_circle(context, c, CHARGE_RADIUS, colorPositive);
-      coordinates_t p1, p2, p3, p4;
 
       // calcul des deux points pour la ligne verticale du plus
-      p1.column = c.column;
-      p1.row = c.row - CHARGE_RADIUS / 2;
-      p2.column = c.column;
-      p2.row = c.row + CHARGE_RADIUS / 2;
+      coordinates_t p1 = (coordinates_t){
+          .column = c.column,
+          .row = c.row - CHARGE_RADIUS / 2};
+      coordinates_t p2 = (coordinates_t){
+          .column = c.column,
+          .row = c.row + CHARGE_RADIUS / 2};
 
       // dessin
       gfx_draw_line(context, p1, p2, colorPositive);
 
       // calcul des deux points pour la ligne horizontale du plus
-      p3.column = c.column - CHARGE_RADIUS / 2;
-      p3.row = c.row;
-      p4.column = c.column + CHARGE_RADIUS / 2;
-      p4.row = c.row;
+      coordinates_t p3 = (coordinates_t){
+          .column = c.column - CHARGE_RADIUS / 2,
+          .row = c.row};
+      coordinates_t p4 = (coordinates_t){
+          .column = c.column + CHARGE_RADIUS / 2,
+          .row = c.row};
 
       // dessin
       gfx_draw_line(context, p3, p4, colorPositive);
@@ -314,12 +312,15 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
     else
     { // minus sign
       gfx_draw_circle(context, c, CHARGE_RADIUS, colorNegative);
-      coordinates_t m1, m2;
+
       // calcul des deux points pour dessiner le signe -
-      m1.column = c.column - CHARGE_RADIUS / 2;
-      m1.row = c.row;
-      m2.column = c.column + CHARGE_RADIUS / 2;
-      m2.row = c.row;
+      coordinates_t m1 = (coordinates_t){
+          .column = c.column - CHARGE_RADIUS / 2,
+          .row = c.row};
+      coordinates_t m2 = (coordinates_t){
+          .column = c.column + CHARGE_RADIUS / 2,
+          .row = c.row};
+
       // dessiner le moins à l'écran
       gfx_draw_line(context, m1, m2, colorNegative);
     }

@@ -3,6 +3,7 @@
 #include "utils/vec2/vec2.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 vec2 randomPos() { return (vec2){.x = rand_one(), .y = rand_one()}; }
 
@@ -20,8 +21,10 @@ int main()
     return EXIT_FAILURE;
   }
   // create all charges
-  vec2 qPos;
   charge_t charges[NBCHARGES];
+  /*
+  //symetric charges
+  vec2 qPos;
   qPos = vec2_create(0.25, 0.5);
   charges[0] = charge_create(+30, qPos);
 
@@ -33,10 +36,13 @@ int main()
 
   qPos = vec2_create(0.75, 0.5);
   charges[3] = charge_create(+30, qPos);
-  // for(int i=0; i<NBCHARGES; i++){
-  //   charges[i].pos=randomPos();
-  //   charges[i].q=randomQ();
-  // }
+  */
+  //random pos for all charges
+  srand(time(NULL));
+  for(int i=0; i<NBCHARGES; i++){
+    charges[i].pos=randomPos();
+    charges[i].q=randomQ();
+  }
 
   vec2 P;
 

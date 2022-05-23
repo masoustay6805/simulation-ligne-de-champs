@@ -130,4 +130,7 @@ On a essayer plusieurs représentation pour bien modéliser les lignes de champs
 
 
 
+## **Conclusion**
 
+On a pu donc observer le comportement des lignes de champs dépendant du placement des charges et de leur signes. On sait également que lorsqu'on voudrait dessiner la ligne de champs trop près de la charge, la ligne de champs a cet endroit ne progresse plus et reste à proximité de la charge. Si le nombre de particules aléatoire diminue, le nombre de ligne de champ diminue et cela deviens plus dure d'apercevoir distinctement la forme des lignes de champs autour des charges. 
+Pour améliorer mon travail, on pourrais déplacer les charges dynamiquement et modifier leur valeures et observer le changement au niveau des lignes champs. On pourrait également faire la même chose avec les particules pour avoir une animation au niveau des lignes de champs directement.
