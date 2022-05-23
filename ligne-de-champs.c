@@ -28,14 +28,12 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
     {
       double e = 0;
       double a = 2 * dy;
-
       int y = p0.row;
-      for (int x = p0.column; x < p1.column; x++)
+
+      for (uint32_t x = p0.column; x < p1.column; x++)
       {
         gfx_putpixel(ctxt, x, y, color);
-
         e += a;
-
         if (dx <= e)
         {
           e -= 2 * dx;
@@ -47,14 +45,12 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
     { // deuxième octant
       int e = 0;
       int a = 2 * dx;
-
       int x = p0.column;
 
-      for (int y = p0.row; y < p1.row; y++)
+      for (uint32_t y = p0.row; y < p1.row; y++)
       {
         gfx_putpixel(ctxt, x, y, color);
         e += a;
-
         if (dy <= e)
         {
           e -= 2 * dy;
@@ -66,17 +62,13 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
     { // troisième octant
       int e = 0;
       int a = 2 * dx;
-
       int m_dy = p0.row - p1.row;
-
       int x = p0.column;
 
-      for (int y = p0.row; y < p1.row; y++)
+      for (uint32_t y = p0.row; y < p1.row; y++)
       {
         gfx_putpixel(ctxt, x, y, color);
-
         e += a;
-
         if (e <= m_dy)
         {
           x -= 1;
@@ -105,14 +97,12 @@ void gfx_draw_line(struct gfx_context_t *ctxt, coordinates_t p0,
     {
       int a = 2 * dy;
       int e = 0;
-
       int y = p0.row;
 
-      for (int x = p0.column; x < p1.column; x++)
+      for (uint32_t x = p0.column; x < p1.column; x++)
       {
         gfx_putpixel(ctxt, x, y, color);
         e += a;
-
         if (e <= m_dx)
         {
           y -= 1;
@@ -192,7 +182,6 @@ vec2 qp_distance(vec2 p, charge_t c) { return vec2_sub(p, c.pos); }
 double e_calculate(charge_t c, vec2 qP)
 {
   return K * c.q / pow(vec2_norm(qP), 2.0);
-  // return K * c.q / vec2_norm(vec2_mul_vec(qP, qP));
 }
 
 // calcul de la constante tetaX
@@ -238,16 +227,15 @@ vec2 P_previous_calculate(vec2 previous_P, double tetaX, vec2 totalE)
 }
 
 // Returns false if pos0 is not a valid position
-// (for example if pos0 is too close to a charge).
-bool in_univers(vec2 p, charge_t *charges, double limitX, double limitY,
-                int num_charges, double eps)
+bool in_univers(vec2 p, double limitX, double limitY)
 {
-  bool in_univers = false;
   // check if P is in the window
-  if (p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0)
-  {
-    in_univers = true;
-  }
+  return p.x <= limitX && p.y <= limitY && p.x >= 0.0 && p.y >= 0.0;
+}
+
+// (for example if pos0 is too close to a charge).
+bool in_charge(vec2 p, charge_t *charges, int num_charges, double eps)
+{
   // check if P is in the charges(pos(charges)-eps or pos(charges)+eps)
   // if it in the charge don't draw it
   for (int i = 0; i < num_charges; i++)
@@ -255,21 +243,22 @@ bool in_univers(vec2 p, charge_t *charges, double limitX, double limitY,
     if (p.x > (charges[i].pos.x - eps) && p.x < (charges[i].pos.x + eps) &&
         p.y > (charges[i].pos.y - eps) && p.y < charges[i].pos.y + eps)
     {
-      in_univers = false;
+      return true;
     }
   }
-  return in_univers;
+  return false;
 }
+
 // Compute and then draw all the points belonging to a field line,
 // starting from pos0.
 void draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
                      int num_charges, double eps, vec2 pos0, int color)
 {
-  vec2 total_E, qP, P;
+  vec2 total_E, P;
   double tetaX = tetaX_calculate(SCREEN_WIDTH, SCREEN_HEIGHT);
   P = pos0;
   // draw all pNext until the charges
-  while (in_univers(P, charges, LIMIT_X, LIMIT_Y, num_charges, eps))
+  while (in_univers(P, LIMIT_X, LIMIT_Y) && !in_charge(P, charges, num_charges, eps))
   {
     coordinates_t Pnext = position_to_coordinates(SCREEN_HEIGHT, SCREEN_WIDTH, 0, LIMIT_X, 0, LIMIT_Y, P);
     gfx_putpixel(ctxt, Pnext.column, Pnext.row, color);
@@ -278,7 +267,7 @@ void draw_field_line(struct gfx_context_t *ctxt, charge_t *charges,
   }
   P = pos0;
   // draw all pPrevious until the charges
-  while (in_univers(P, charges, LIMIT_X, LIMIT_Y, num_charges, eps))
+  while (in_univers(P, LIMIT_X, LIMIT_Y) && !in_charge(P, charges, num_charges, eps))
   {
     coordinates_t Pprev = position_to_coordinates(SCREEN_HEIGHT, SCREEN_WIDTH, 0, LIMIT_X, 0, LIMIT_Y, P);
     gfx_putpixel(ctxt, Pprev.column, Pprev.row, color);
@@ -310,14 +299,16 @@ void draw_charges(struct gfx_context_t *context, charge_t *charges,
       p2.column = c.column;
       p2.row = c.row + CHARGE_RADIUS / 2;
 
+      // dessin
+      gfx_draw_line(context, p1, p2, colorPositive);
+
       // calcul des deux points pour la ligne horizontale du plus
       p3.column = c.column - CHARGE_RADIUS / 2;
       p3.row = c.row;
       p4.column = c.column + CHARGE_RADIUS / 2;
       p4.row = c.row;
 
-      // dessiner le plus a l'ecran
-      gfx_draw_line(context, p1, p2, colorPositive);
+      // dessin
       gfx_draw_line(context, p3, p4, colorPositive);
     }
     else

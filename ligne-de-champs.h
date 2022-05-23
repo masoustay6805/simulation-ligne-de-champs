@@ -5,7 +5,10 @@
 #define CHARGE_RADIUS 10.0
 #define LIMIT_X 1
 #define LIMIT_Y 1
-#define LINENB 200
+#define LINENB 300
+#define NBCHARGES 4
+#define MIN_Q -100
+#define MAX_Q 100
 
 
 
