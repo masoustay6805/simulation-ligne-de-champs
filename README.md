@@ -1,4 +1,4 @@
-# Simulation des ligne de champs
+# Simulation des lignes de champs
 
 ## **Introduction**
 
