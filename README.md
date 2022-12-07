@@ -8,12 +8,12 @@ Un champ éléctrique est le champ vectoriel créée par des particules éléctr
 
 Tout d'abord, chaque charge éléctrique sera représenté d'un cercle avec un plus ou moins à l'intérieur dépendant du signe de la charge:  
 
-![Dessin charges à partir de la librairie gfx](./Images/Dessin_charges.png){width=25%}
+![Dessin charges à partir de la librairie gfx](./Rapport/Images/Dessin_charges.png)
 
   
 Pour représenter les droites du signe plus et moins à l'écran, j'ai utilisé l'algorithme de tracé de droites de Bresenham. Cela permet de tracer chaque pixel de la droite entre deux points pour que la droite soit plus précise sans saut incohérent de pixels comme ci-dessous: 
 
-![Tracé de Bresenham(Extrait de wikipédia)](./Images/Trace_Bresenham.png){width=50%}
+![Tracé de Bresenham(Extrait de wikipédia)](./Rapport/Images/Trace_Bresenham.png)
 
 Pour le cercle autour de chaque charge, j'ai utilisé l'algorithme de tracé de cercle d'Andres. Cet algorithme permet de tracer des cercles en image matricielle, et donc de pouvoir dessiner un cercle sans laisser de trous. Le principe est de paver entièrement le plan par des cercles concentriques.
 
@@ -116,17 +116,17 @@ Dans notre cas, la valeur de la charge donc le signe également sont générés 
 
 Pour représenter les lignes de champs on a placer tout d'abord les charges de manière à représenter joliement les lignes de champs. Ci-dessous on a deux charges positives, on peut voir que les deux charges se repoussent entre eux:
 
-![Lignes de champs de deux charges positives](./Images/deux_charges_positives.png){width=35%}
+![Lignes de champs de deux charges positives](./Rapport/Images/deux_charges_positives.png)
 
 Et quand on a une charge positive d'un côté et une charge négative de l'autre, on peut voir que les deux charges s'attirent entre elles:
 
-![Entre une charge positive et une charge négative](./Images/positive_negative_charges.png){width=50%}
+![Entre une charge positive et une charge négative](./Rapport/Images/positive_negative_charges.png)
 
 On peut voir que pour représenter chaque charge dans notre univers, on a décider de représenter les charges positives en bleu, les charges négatives en bleu et les lignes de champs en jaune.
 
 On a essayer plusieurs représentation pour bien modéliser les lignes de champs par exemple en mettant les charges de manières symétriques. Ce qui nous donne de belle figures comme ci-dessous:
 
-![Charges placées de manière symétrique](./Images/exemple_lignes.png){width=49%}
+![Charges placées de manière symétrique](./Rapport/Images/exemple_lignes.png)
 
 
 
